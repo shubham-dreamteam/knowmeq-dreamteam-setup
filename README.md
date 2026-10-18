@@ -37,7 +37,7 @@ Dreamteam is my CRM and single source of truth. Each person keeps their own hist
 
 WHAT DREAMTEAM ALREADY DOES (verify, never rebuild)
 - Outlook email syncs into Dreamteam natively, with threads, on the right contact and institution.
-- Replies to my Instantly and Apollo sequences reach Dreamteam because those tools use my Outlook address as the reply-to. Dreamteam creates the contact (Source = Email) and the institution from that reply.
+- Replies to my Instantly and Apollo sequences reach Dreamteam when those tools use my Outlook address as the reply-to. Dreamteam then creates the contact (Source = Email) and the institution from that reply. Check with me whether reply-to is set in each tool. If it is not, show me where to set it and I will change it myself. Workflow C depends on it.
 - Dreamteam's AI teammate creates follow-up tasks and draft replies in My Day. You never create tasks or drafts.
 
 THIS IS A LIGHT RUNNER
@@ -117,7 +117,7 @@ Dreamteam tests: user_me shows knowmeq; object_describe on contact shows outboun
 Gojiberry test: one conversation shows message IDs, both sides, and deliveredAt.
 Apollo test: the "Dreamteam sync" list's members can be read (MCP or API).
 Instantly test: one known lead's sent emails can be read with message and thread IDs.
-Outlook: confirm in Dreamteam that the mailbox is connected. Do not add another mailbox or change reply-to settings.
+Outlook: confirm in Dreamteam that the mailbox is connected. Do not add another mailbox. Never change reply-to settings yourself; I do that.
 Keep a short table: tool, account, read test, needed actions available, works in the scheduled runtime, next action.
 
 STEP 3. AGREE THE SETUP
