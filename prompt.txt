@@ -24,13 +24,15 @@ The job keeps no storage of its own: no spreadsheets, files, databases, baseline
 - Anything that fails is simply picked up again next run, because the checks above still say it is not done.
 Every run looks back a fixed window of 3 days (and never before activation). If the job misses more than 3 days, tell me and offer a one-off run with a wider window.
 
-THE THREE V1 WORKFLOWS (all forward-only from activation)
+THE THREE V1 WORKFLOWS
 
-A. Apollo import. I will create one new, empty Apollo list called "Dreamteam sync" at activation, and add people to it when I want them in Dreamteam. Each run: read that list. For every member whose email is not yet in Dreamteam, create the contact, link the institution, and set Outbound Lead Source = Apollo. Members already in Dreamteam are skipped untouched.
+A. Apollo import. I choose which Apollo list or lists should flow into Dreamteam; these are my engaged or qualified prospects, not everyone. Each run: read the chosen lists. For every member whose email is not yet in Dreamteam, create the contact, link the institution, and set Outbound Lead Source = Apollo. Members already in Dreamteam are skipped untouched. People I add to those lists later are picked up on the next run.
+
+B and C are forward-only from activation: they never process LinkedIn messages or replies from before it.
 B. LinkedIn notes. Each run: read Gojiberry messages delivered in the window, for contacts in the campaigns I approve. For each conversation with messages not yet noted, add one short summary note to the contact and institution. If the person is not in Dreamteam yet and has an email, create them with Outbound Lead Source = Gojiberry.
 C. Lead source tagging. Each run: find Dreamteam contacts with Source = Email, created in the window, with Outbound Lead Source empty. For each, find the outbound email they replied to in Instantly, Apollo or Gojiberry. If the evidence clearly shows which tool sent it, set that tool. If not, leave it empty and list it in the run summary.
 
-Out of scope for v1, so do not build or imply: campaign or sequence fields, sequence status, pausing outreach, tasks, full message mirroring, historical imports, old LinkedIn history, or Apollo open and click signals.
+Out of scope for v1, so do not build or imply: campaign or sequence fields, sequence status, pausing outreach, tasks, full message mirroring, old LinkedIn history, older email replies, or Apollo open and click signals.
 
 DREAMTEAM FACTS (checked in the KnowMeQ tenant; still confirm after connecting)
 - Tenant: knowmeq.dreamteamcrm.ai
@@ -49,7 +51,7 @@ DREAMTEAM FACTS (checked in the KnowMeQ tenant; still confirm after connecting)
 SOURCE TOOLS: WHAT IS KNOWN
 Apollo (https://docs.apollo.io/docs/apollo-mcp):
 - Apollo prohibits AI model training on its data. Help me turn off model training in this client's settings before connecting.
-- Its MCP can search lists and contacts. Test whether contact search can return the members of the "Dreamteam sync" list. If not, use Apollo's API: GET /api/v1/labels to find the list, then POST /api/v1/contacts/search with contact_label_ids. Both are free reads (https://docs.apollo.io/reference/search-for-contacts).
+- Its MCP can search lists and contacts. Test whether contact search can return the members of a chosen list. If not, use Apollo's API: GET /api/v1/labels to find the list, then POST /api/v1/contacts/search with contact_label_ids. Both are free reads (https://docs.apollo.io/reference/search-for-contacts).
 - Never use enrichment credits.
 
 Gojiberry (https://help.gojiberry.ai/en/articles/14540015-using-the-gojiberry-mcp-server):
@@ -90,7 +92,7 @@ STEP 2. CONNECT AND TEST EACH TOOL
 One at a time: check if it is already connected where the job will run, guide me through official sign-in, confirm the account with a record I recognise, list its tools, and run one small read-only test.
 Dreamteam tests: user_me shows knowmeq; object_describe on contact shows outbound_lead_source with its three options; one email filter returns a known contact; object_record_associations can list a contact's notes.
 Gojiberry test: one conversation shows message IDs, both sides, and deliveredAt.
-Apollo test: the "Dreamteam sync" list's members can be read (MCP or API).
+Apollo test: the members of one chosen list can be read (MCP or API), with email, name, title, company and LinkedIn URL.
 Instantly test: one known lead's sent emails can be read with message and thread IDs.
 Outlook: confirm in Dreamteam that the mailbox is connected. Do not add another mailbox. Never change reply-to settings yourself; I do that.
 Keep a short table: tool, account, read test, needed actions available, works in the scheduled runtime, next action.
@@ -98,7 +100,7 @@ Keep a short table: tool, account, read test, needed actions available, works in
 STEP 3. AGREE THE SETUP
 Collect in short rounds, offering choices from the tools so I don't hunt for IDs:
 - The activation time, shown in UTC and my named time zone (for example America/Toronto).
-- Confirmation that the empty "Dreamteam sync" list exists in Apollo.
+- Which Apollo list or lists to bring in. Show me my lists with member counts. If a list has more than 200 people not yet in Dreamteam, suggest Dreamteam's CSV import for the first load and let the runner handle additions after that.
 - The Gojiberry campaigns whose conversations count.
 - Run time and days. Suggest end of day, daily.
 - The Dreamteam owner for new contacts.
@@ -139,7 +141,7 @@ EVERY RUN
 
 STEP 4. PILOT
 The first run happens here in chat, supervised. Show me a preview of every write and wait for my approval. Cap the pilot at 10 contacts in total.
-Pass means at least one real event per workflow, written correctly and read back, and a second run creating zero duplicates. If a workflow has no real event yet, mark it "not yet tested". Never fake one or use old activity. If needed, I can add one person to the "Dreamteam sync" list to test A.
+Pass means at least one real event per workflow, written correctly and read back, and a second run creating zero duplicates. If a workflow has no real event yet, mark it "not yet tested". Never fake one or use old activity. For the pilot, Workflow A imports at most 10 people from the chosen list, shown to me first.
 
 STEP 5. TURN ON THE SCHEDULE
 - Show me the schedule, time zone and what it writes, and get my approval.
